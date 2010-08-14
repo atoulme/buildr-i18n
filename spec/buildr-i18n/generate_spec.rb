@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), "..", "spec_helpers.rb")
 
 describe Buildr::I18N::TemplateGeneration do
   
-  before(:all) do
+  before(:each) do
     write "src/messages_en_US.properties", "key=value"
     write "src/messages_fr.properties", "key=valeur"
     write "src/messages_de.properties", "key=Wert"
