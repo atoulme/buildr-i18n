@@ -31,4 +31,5 @@ A complementary system to create translation of strings placed in properties fil
   # Tested against these dependencies.
   spec.add_dependency 'buildr',               '>= 1.4.0'
   spec.add_dependency 'jekyll',               '~> 0.6.2'
+  spec.add_dependency 'sinatra',              '>= 1.0'
 end

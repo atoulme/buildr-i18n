@@ -34,11 +34,15 @@ TXT
       ""
     end
     
+    def text_field(key, locale, country, value)
+      "<input type='text' id='#{key}_#{locale}' value='#{value}' onChange='update_value(#{key}, #{locale}, #{country}, this.value)' onLoad='this.value = get_value(#{key}, #{locale}, #{country})'/>"
+    end
+    
     def table(bundle)
       props = bundle.sorted_properties
       table = "table{border:1px solid black}.\n|Keys|#{props.map(&:locale).join('|')}|"
       bundle.master.content.keys.sort.each do |key|
-        table += "\n|key|#{props.collect {|prop| prop.content[key] || ""}.join("|")}|"
+        table += "\n|key|#{props.collect {|prop| text_field(key, prop.locale, prop.country, prop.content[key] || "")}.join("|")}|"
       end
       table
     end

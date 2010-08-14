@@ -3,7 +3,38 @@
   <head>
     <meta content='text/html;charset=UTF-8' http-equiv='Content-Type'>
     <title>{{ page.title }}</title>
-    <script src="i18n.js">
+	<script src="http://prototypejs.org/assets/2009/8/31/prototype.js"/>
+    <script type="text/javascript">
+      SERVER_URL = "http://localhost:4567"
+      function update_value(key, locale, country, value) {
+		url = SERVER_URL + "/update_value/" + key + "/" + locale + "/" + country 
+	    new Ajax.Request(url, {
+		  method: 'post',
+		  postBody: value,
+		  onSuccess: function(transport) {
+		    //good.
+		  },
+		  onFailure: function(transport) {
+			alert("Could not update the value of " + key)
+		  }
+		});
+      }
+
+	  function get_value(key, locale, country) {
+		url = SERVER_URL + "/get_value/" + key + "/" + locale + "/" + country 
+	    new Ajax.Request(url, {
+		  method: 'get',
+		  postBody: value,
+		  onSuccess: function(transport) {
+		    //good.
+		    return transport.response.body;
+		  },
+		  onFailure: function(transport) {
+			alert("Could not get the value of " + key)
+		  }
+		});
+      }
+	</script>
   </head>
   <body>
 	{{content}}
