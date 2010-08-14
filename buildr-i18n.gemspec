@@ -14,7 +14,7 @@
 # the License.
 
 Gem::Specification.new do |spec|
-  spec.name           = 'buildri18n'
+  spec.name           = 'buildr-i18n'
   spec.version        = '0.0.1'
   spec.author         = 'Buildr i18n'
   spec.email          = "users@buildr.apache.org"
