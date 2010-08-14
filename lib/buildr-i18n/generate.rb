@@ -21,6 +21,11 @@ TXT
     
     def head(bundle)
 <<-TXT
+---
+layout: default
+title: #{bundle.path}
+---
+
 h1. #{bundle.path}
 TXT
     end
@@ -46,6 +51,8 @@ TXT
     def initialize(*args)
       super(*args)
       enhance do
+        mkdir_p File.join(@project.path_to("_i18n"), "_layouts")
+        cp File.join(File.dirname(__FILE__), "templates", "default.html"), File.join(@project.path_to("_i18n"), "_layouts")
         # Create the templates.
         @bundles.each do |bundle|
           Buildr::write File.join(@project.path_to("_i18n"), "#{bundle.filename}.textile"), page(bundle)

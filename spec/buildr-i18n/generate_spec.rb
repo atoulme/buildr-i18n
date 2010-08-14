@@ -39,6 +39,7 @@ describe Buildr::I18N::TemplateGenerationTask do
   
   it 'should generate the textile files under the _i18n folder' do
     lambda { @foo.task('i18n').invoke  }.should change {File.exist?(@foo.path_to("_i18n/src_messages.textile"))}.from(false).to(true)
+    File.exist?(@foo.path_to("_i18n/_layouts/default.html")).should be_true
     File.read(@foo.path_to("_i18n/src_messages.textile")).should == <<-TXT
 h1. src/messages
 
