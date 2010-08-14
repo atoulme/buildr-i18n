@@ -12,12 +12,12 @@ describe "Buildr::I18N.find_properties_files" do
   end
   
   it 'should find the properties files placed in the resources' do
-    Buildr::I18N.find_properties_files(project("foo")).should == [File.join(project("foo").base_dir, "src/main/resources/prop.properties")]
+    Buildr::I18N.find_properties_files(project("foo")).should == ["src/main/resources/prop.properties"]
   end
   
   it 'should not pick up properties files placed in the target folder' do
     project("foo").compile.invoke
-    Buildr::I18N.find_properties_files(project("foo")).should == [File.join(project("foo").base_dir, "src/main/resources/prop.properties")]
+    Buildr::I18N.find_properties_files(project("foo")).should == ["src/main/resources/prop.properties"]
   end
   
 end
