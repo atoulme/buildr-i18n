@@ -13,10 +13,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-unless defined?(Buildr::VERSION)
-  require File.join(File.dirname(__FILE__), 'lib', 'buildr', 'version.rb')
-end
-
 Gem::Specification.new do |spec|
   spec.name           = 'buildri18n'
   spec.version        = '0.0.1'

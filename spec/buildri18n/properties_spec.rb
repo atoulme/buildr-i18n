@@ -6,7 +6,7 @@ describe "Buildr::I18N.find_properties_files" do
   before(:each) do
     write "src/main/java/SomeJava.java","public class SomeJava {}"
     write "src/main/resources/prop.properties","key=value"
-    Buildr::define "foo" do
+    define "foo" do
       compile
     end
   end

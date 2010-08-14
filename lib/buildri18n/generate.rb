@@ -10,19 +10,19 @@ module Buildr::I18N
   module TemplateGeneration
     
     def page(bundle)
-      <<-TXT
-       #{head(bundle)}
-       
-       #{table(bundle)}
-       
-       #{footer(bundle)}
-      TXT
+<<-TXT
+#{head(bundle)}
+
+#{table(bundle)}
+
+#{footer(bundle)}
+TXT
     end
     
     def head(bundle)
-      <<-TXT
-      h1. #{bundle.path}
-      TXT
+<<-TXT
+h1. #{bundle.path}
+TXT
     end
     
     def footer(bundle)
@@ -40,7 +40,7 @@ module Buildr::I18N
     
   end
   
-  class TemplateGenerationTask < Rake::FileTask
+  class TemplateGenerationTask < Rake::Task
     include TemplateGeneration
     
     def initialize(*args)
@@ -48,7 +48,7 @@ module Buildr::I18N
       enhance do
         # Create the templates.
         @bundles.each do |bundle|
-          write "#{bundle.filename}.textile", page(bundle)
+          Buildr::write File.join(@project.path_to("_i18n"), "#{bundle.filename}.textile"), page(bundle)
         end    
       end
     end
@@ -57,6 +57,7 @@ module Buildr::I18N
     private 
     
     def associate_with(project)
+      @project = project
       prop_files = Buildr::I18N.find_properties_files(project)
       enhance prop_files
       @bundles = Buildr::I18N.group_properties(prop_files)
@@ -72,11 +73,10 @@ module Buildr::I18N
       Project.local_task('i18n') { |name| "Generate internationalization templates for #{name}" }
     end
 
-    before_define(:i18n) do |project|
+    before_define do |project|
       if (project.projects.empty?) 
-        i18n = ::Buildr::I18N::TemplateGenerationTask.define_task(project.path_to("_i18n"))
+        i18n = ::Buildr::I18N::TemplateGenerationTask.define_task("i18n")
         i18n.send :associate_with, project
-        task('i18n').enhance [i18n]
       end
     end
     
@@ -85,5 +85,5 @@ module Buildr::I18N
 end
 
 class Buildr::Project
-  include Buildr::I18N::TemplateGenerationExtension
+  include ::Buildr::I18N::TemplateGenerationExtension
 end

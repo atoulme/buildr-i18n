@@ -4,7 +4,8 @@ module Buildr
 
     # Find all the properties file inside a project, inside sources, resources, or at the root.
     def I18N.find_properties_files(project)
-      Dir.glob((File.join(project.base_dir, "**", "*.properties"))).delete_if {|file| file.match project.path_to("target")}
+      Dir.glob((File.join(project.base_dir, "**", "*.properties"))).delete_if {|file| file.match project.path_to("target")
+        }.map {|path| Pathname.new(path).relative_path_from(Pathname.new(project.base_dir)).to_s}
     end
 
     # Group properties file per message bundle.
