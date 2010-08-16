@@ -34,11 +34,11 @@ describe Buildr::I18N::TemplateGenerationTask do
   end
   
   it 'should have a i18n task' do
-    @foo.task('i18n').should be_instance_of Buildr::I18N::TemplateGenerationTask 
+    @foo.task('i18n:generate').should be_instance_of Buildr::I18N::TemplateGenerationTask 
   end
   
   it 'should generate the textile files under the _i18n folder' do
-    lambda { @foo.task('i18n').invoke  }.should change {File.exist?(@foo.path_to("_i18n/src_messages.textile"))}.from(false).to(true)
+    lambda { @foo.task('i18n:generate').invoke  }.should change {File.exist?(@foo.path_to("_i18n/src_messages.textile"))}.from(false).to(true)
     File.exist?(@foo.path_to("_i18n/_layouts/default.html")).should be_true
     File.read(@foo.path_to("_i18n/src_messages.textile")).should == <<-TXT
 h1. src/messages
@@ -50,6 +50,11 @@ table{border:1px solid black}.
 
 
 TXT
+  end
+  
+  it 'should generate the html files under the _i18n folder' do
+    lambda { @foo.task('i18n:generate').invoke }.should change {File.exist?(@foo.path_to("_i18n/src_messages.html"))}.from(false).to(true)
+    
   end
   
 end

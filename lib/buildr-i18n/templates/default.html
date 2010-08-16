@@ -7,7 +7,7 @@
     <script type="text/javascript">
       SERVER_URL = "http://localhost:4567"
       function update_value(key, locale, country, value) {
-		url = SERVER_URL + "/update_value/" + key + "/" + locale + "/" + country 
+		url = concat(SERVER_URL, "/update_value?bundle=", "{{ page.bundle }}", "key=", key, "&locale=", locale, "&country=", country) 
 	    new Ajax.Request(url, {
 		  method: 'post',
 		  postBody: value,
@@ -21,7 +21,7 @@
       }
 
 	  function get_value(key, locale, country) {
-		url = SERVER_URL + "/get_value/" + key + "/" + locale + "/" + country 
+		url = concat(SERVER_URL, "/get_value?bundle=", "{{ page.bundle }}", "key=", key, "&locale=", locale, "&country=", country) 
 	    new Ajax.Request(url, {
 		  method: 'get',
 		  postBody: value,
