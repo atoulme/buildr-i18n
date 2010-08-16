@@ -16,7 +16,7 @@ describe Buildr::I18N::TemplateGeneration do
   
   it 'should generate some textile for a property key' do
     table = @tGen.table(@bundle)
-    table.should match /\|value\|Wert\|valeur\|\|/
+    table.should match /\|Keys\|en\|de\|fr\|it\|\n\|key\|/
   end
   
 end
@@ -40,7 +40,7 @@ describe Buildr::I18N::TemplateGenerationTask do
   it 'should generate the textile files under the _i18n folder' do
     lambda { @foo.task('i18n:generate').invoke  }.should change {File.exist?(@foo.path_to("_i18n/src_messages.textile"))}.from(false).to(true)
     File.exist?(@foo.path_to("_i18n/_layouts/default.html")).should be_true
-    File.read(@foo.path_to("_i18n/src_messages.textile")).should == <<-TXT
+    File.read(@foo.path_to("_i18n/src_messages.textile")).should match <<-TXT
 h1. src/messages
 
 
