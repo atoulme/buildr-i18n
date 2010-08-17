@@ -122,6 +122,12 @@ module Sandbox
     # Don't output crap to the console.
     trace false
     verbose false
+    
+    # set test environment
+    Buildr::I18N::I18NBackendServerTask::I18NBackend.set :environment, :test
+    Buildr::I18N::I18NBackendServerTask::I18NBackend.set :run, false
+    Buildr::I18N::I18NBackendServerTask::I18NBackend.set :raise_errors, true
+    Buildr::I18N::I18NBackendServerTask::I18NBackend.set :logging, false
   end
 
   # Call this from teardown.

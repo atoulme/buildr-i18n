@@ -86,17 +86,43 @@ TXT
   end
   
   class I18NBackendServerTask < Rake::Task
+    
+    attr_reader :bundles
+    
+    def initialize(*args)
+      super(*args)
+      enhance do
+        stop = false
+        writer = Thread.new { while(!stop) do sleep(5) ; write_properties end }
+        Thread.new {I18NBackend.run!}
+        trap(:INT) { stop = true }
+        writer.run
+        
+      end
+    end
+    
+    def write_properties
+      @bundles.each do |bundle|
+        bundle.properties.each do |prop|
+          Buildr::write prop.path, prop.content.to_java_properties
+        end
+      end
+      
+    end
+    
     require 'sinatra/base'
 
     class I18NBackend < Sinatra::Base
-
+      
       post '/update_value' do
-
         new_value = request.body.read.to_s
+        settings.bundles.detect {|b| b.path == params[:bundle]}.properties.detect {|prop| 
+          prop.locale == params[:locale] && prop.country == params[:country]
+        }.content[params[:key]] = new_value
       end
 
       get '/get_value' do
-        @bundles.detect {|b| b.path == params[:bundle]}.properties.detect {|prop| 
+        settings.bundles.detect {|b| b.path == params[:bundle]}.properties.detect {|prop| 
           prop.locale == params[:locale] && prop.country == params[:country]
         }.content[params[:key]]
       end
@@ -110,6 +136,7 @@ TXT
       prop_files = Buildr::I18N.find_properties_files(project)
       enhance prop_files
       @bundles = Buildr::I18N.group_properties(prop_files)
+      Buildr::I18N::I18NBackendServerTask::I18NBackend.set :bundles, @bundles
     end
     
   end

@@ -12,6 +12,9 @@ module SpecHelpers
   $LOAD_PATH.unshift File.expand_path('../lib', File.dirname(__FILE__))
   require 'buildr-i18n'
     
+  gem 'rack-test'
+  require 'spec/interop/test'
+  require 'rack/test'
   
   require 'sandbox'
   

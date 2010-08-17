@@ -1,6 +1,8 @@
 
 require File.join(File.dirname(__FILE__), "..", "spec_helpers.rb")
 
+
+
 describe Buildr::I18N::TemplateGeneration do
   
   before(:each) do
@@ -40,22 +42,47 @@ describe Buildr::I18N::TemplateGenerationTask do
   it 'should generate the textile files under the _i18n folder' do
     lambda { @foo.task('i18n:generate').invoke  }.should change {File.exist?(@foo.path_to("_i18n/src_messages.textile"))}.from(false).to(true)
     File.exist?(@foo.path_to("_i18n/_layouts/default.html")).should be_true
-    File.read(@foo.path_to("_i18n/src_messages.textile")).should match <<-TXT
-h1. src/messages
-
-
-table{border:1px solid black}.
-|Keys|en|de|fr|it|
-|key|value|Wert|valeur||
-
-
-TXT
+    File.read(@foo.path_to("_i18n/src_messages.textile")).should match /h1. src\/messages/
   end
   
   it 'should generate the html files under the _i18n folder' do
     lambda { @foo.task('i18n:generate').invoke }.should change {File.exist?(@foo.path_to("_i18n/src_messages.html"))}.from(false).to(true)
-    
   end
   
+end
+
+
+describe "My App" do
+    include Rack::Test::Methods
+    
+    before(:each) do
+      write "src/messages_en_US.properties", "key=value"
+      write "src/messages_fr.properties", "key=valeur"
+      write "src/messages_de.properties", "key=Wert"
+      write "src/messages_it.properties", ""
+      @foo = define "foo" do
+      end
+      @foo.invoke
+    end
+
+    def app
+      Buildr::I18N::I18NBackendServerTask::I18NBackend
+    end
+
+    it 'should give values' do
+      get '/get_value?bundle=src/messages&key=key&locale=fr'
+      last_response.body.should == 'valeur' 
+    end
+    
+    it 'should write values' do
+      post '/update_value?bundle=src/messages&key=key&locale=fr', 'valeureux'
+      @foo.task('i18n:server').bundles.detect {|b| b.path == 'src/messages'}.properties.detect {|prop| prop.locale == 'fr'
+      }.content['key'].should == 'valeureux'
+      #Buildr::I18N::I18NBackendServerTask::I18NBackend.stub!(:run!).and_return(nil)
+      @foo.task('i18n:server').invoke
+      sleep 10
+      File.read("src/messages_fr.properties").should match /valeureux/
+    end
+
 end
     
